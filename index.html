@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+    
+  </head>
+
+  <body>
+  
+
+    <script src="libs/three.min.js"></script>
+    <script src="libs/dat.gui.min.js"></script>
+    <script src="libs/Detector.js"></script>
+
+    <script type="module">
+      
+
+      var camerapos={x:20,y:10,z:20};
+      if (!Detector.webgl) Detector.addGetWebGLMessage();
+
+      var renderer = new THREE.WebGLRenderer();
+
+      var camera = new THREE.PerspectiveCamera(
+        35,
+        window.innerWidth / window.innerHeight,
+        1,
+        1000
+      );
+      var scene = new THREE.Scene();
+
+      var matFloor = new THREE.MeshPhongMaterial({ dithering: true });
+      var matBox = new THREE.MeshPhongMaterial({
+        color: 0xebe20d,
+        dithering: true,
+      });
+
+      var geoFloor = new THREE.BoxGeometry(1000, 1, 1000);
+      var geoBox = new THREE.BoxGeometry(2, 2, 2);
+
+      var mshFloor = new THREE.Mesh(geoFloor, matFloor);
+      var mshBox = new THREE.Mesh(geoBox, matBox);
+      var mshBox2 = new THREE.Mesh(geoBox, matBox);
+
+      var ambient = new THREE.AmbientLight(0xffffff, 0.1);
+      const light = new THREE.PointLight( 0xffffff, 1, 1000 );
+light.position.set( 50, 50, 50 );
+scene.add( light );
+
+const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+scene.add( directionalLight );
+
+      var spotLight = new THREE.SpotLight(0xffffff, 1);
+      var lightHelper;
+
+      var gui,
+        guiElements,
+        param = { color: "0xffffff" };
+      var controls;
+
+     //*****************************************************************************************
+    
+     var geometry;
+     var material;
+   
+     
+
+     
+
+     //*****************************************************************************************
+      function init() {
+
+
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+        renderer.gammaInput = true;
+        renderer.gammaOutput = true;
+
+        camera.position.set(camerapos.x, camerapos.y, camerapos.z);
+        //camera.position.z = 30;
+
+        spotLight.position.set(camerapos.x, camerapos.y, camerapos.z);
+        spotLight.castShadow = true;
+        spotLight.angle = 0.18;
+        spotLight.penumbra = 0;
+        spotLight.decay = 2;
+        spotLight.distance = 200;
+        spotLight.intensity = 2;
+        spotLight.shadow.mapSize.width = 1024;
+        spotLight.shadow.mapSize.height = 1024;
+        spotLight.shadow.camera.near = 1;
+        spotLight.shadow.camera.far = 200;
+
+        lightHelper = new THREE.SpotLightHelper(spotLight);
+
+        matFloor.color.set(0x808080);
+
+        mshFloor.receiveShadow = true;
+        mshFloor.position.set(0, -0.05, 0);
+
+        mshBox.castShadow = true;
+        mshBox2.castShadow = true;
+      
+        mshBox.position.set(-3, 2.3, 3);
+        mshBox2.position.set(3, 2.3, 3);
+
+        camera.lookAt(mshBox.position);
+
+        scene.add(camera);
+        scene.add(mshFloor);
+        //scene.add(mshBox);
+        // scene.add(mshBox2);
+        scene.add(ambient);
+        scene.add(spotLight);
+        scene.add(new THREE.AxisHelper(10));
+        scene.add(lightHelper);
+
+        document.body.appendChild(renderer.domElement);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        /** instantiate ObjectControls**/
+       
+
+        window.addEventListener("resize", onResize, false);
+
+      }
+
+const geometry1 = new THREE.BufferGeometry();
+        const geometry2 = new THREE.BufferGeometry();
+        const geometry3 = new THREE.BufferGeometry();
+        const geometry4 = new THREE.BufferGeometry();
+        var mesh;
+        var mesh2;
+        var mesh3;
+        var mesh4;
+
+
+
+      function makeshapes(){
+
+        
+
+
+var vertices = [
+	    -1,  1, -1,
+	     1,  1,  1,
+	     1, -1, -1,
+	    -1, -1,  1,
+	    -1,  1, -1,
+	     1, -1, -1,
+	     1, -1, -1,
+	     1,  1,  1,
+	    -1, -1,  1,
+	    -1, -1,  1,
+	     1,  1,  1,
+	    -1,  1, -1
+	  ];
+	
+
+	  var indices1 = [
+	    0,  1,  2,
+	    3,  4,  5,
+	    6,  7,  8,
+	    9, 10, 11
+	  ];
+
+
+    var vertices2 = [
+   
+    
+   
+     1.0,  1.0, -1.0,  
+     1.0,  1.0,  1.0,  
+     1.0, -1.0,  1.0,   
+     1.0, -1.0, -1.0,    
+  
+     1.0,  1.0, -1.0,  
+    -1.0,  1.0, -1.0,  
+    -1.0,  1.0,  1.0,   
+     1.0,  1.0,  1.0,    
+  
+    -1.0,  1.0,  1.0,  
+    -1.0,  1.0, -1.0,  
+    -1.0, -1.0, -1.0,   
+    -1.0, -1.0,  1.0,    
+   
+     1.0, -1.0,  1.0,  
+    -1.0, -1.0,  1.0,  
+    -1.0, -1.0, -1.0,   
+     1.0, -1.0, -1.0,    
+   
+  
+  ];
+
+
+
+
+var indices2 = [
+     1, 2,  2,  0,2, 3,
+     4,  5,  6,   4,  6,  7,
+     8,  9, 10,   8, 10, 11,
+    12, 13, 14,  12, 14, 15,
+    20, 21, 22,  20, 22, 23
+  ];
+  
+
+  var vs = [+1, 0, 0,
+	        -1, 0, 0, // left
+	        0, +1, 0, // up
+	        0, -1, 0, // down
+	        0, 0, +1, // front
+	        0, 0, -1]; // back
+
+
+       var fs = [0, 2, 4,
+            0, 4, 3,
+            0, 3, 5,
+            0, 5, 2,
+            1, 2, 5,
+            1, 5, 3,
+            1, 3, 4,
+            1, 4, 2];
+
+
+
+
+
+
+  geometry1.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+  geometry1.setIndex(indices1);
+
+  geometry2.addAttribute('position', new THREE.Float32BufferAttribute(vertices2, 3));
+  geometry2.setIndex(indices2);
+
+  geometry3.addAttribute('position', new THREE.Float32BufferAttribute(vs, 3));
+  geometry3.setIndex(fs);
+
+
+  const material3 = new THREE.MeshPhongMaterial({color:0xff0000});
+  const material2 = new THREE.MeshBasicMaterial({color:0xffff00,wireframe:true,linewidth:0.1});
+  const material1 = new THREE.MeshBasicMaterial({color:0x00ffff,wireframe:true,linewidth:0.1});
+  const material4 = new THREE.MeshBasicMaterial({color:	0xFF0000,wireframe:true,linewidth:0.1});
+
+   mesh = new THREE.Mesh(geometry1, material1); //piramide
+   mesh2 = new THREE.Mesh(geometry2, material2); // kubas
+
+  
+   mesh3 = new THREE.Mesh(geometry3, material3); // kubas
+  const group = new THREE.Group();
+
+  var items = Dodecahedron();
+
+
+
+  geometry4.addAttribute('position', new THREE.Float32BufferAttribute(items.vertices, 3));
+  geometry4.setIndex(items.indices);
+   mesh4= new THREE.Mesh(geometry4, material4); // kubas
+light.castShadow=true;
+spotLight.castShadow=true;
+
+ mesh.castShadow=true;
+   mesh2.castShadow=true;
+   mesh3.castShadow=true;
+   mesh4.castShadow=true;
+   mesh.receiveShadow = true;
+   mesh2.receiveShadow = true;
+   mesh3.receiveShadow = true;
+   mesh4.receiveShadow = true;
+
+
+group.receiveShadow=true;
+
+ group.add(mesh2);
+  group.add(mesh);
+  group.add(mesh3);
+  group.add(mesh4);
+  scene.add(group);
+        mesh.visible=false;
+       
+        mesh3.visible=false;
+        mesh4.visible=false;
+
+        mesh.position.y=5;
+        mesh2.position.y=5;
+        mesh3.position.y=5;
+        mesh4.position.y=5;
+        
+      
+
+
+
+      }
+
+
+
+
+
+
+      function onResize() {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        render();
+      }
+
+      function render() {
+        lightHelper.update(); // required
+        renderer.render(scene, camera);
+      //  mesh.rotation.x=0.01;
+      }
+
+      function clearGui() {
+        if (gui) gui.destroy();
+
+        gui = new dat.GUI();
+
+        gui.open();
+      }
+
+      function buildGui() {
+        clearGui();
+
+       
+
+      
+
+
+
+        var changeMeshConfig = {
+        
+          dodecahedron: function () {
+            
+            mesh4.visible=!mesh4.visible;
+          },
+          octahedron: function () {
+            
+            mesh3.visible=!mesh3.visible;
+          },
+          tetrahedron: function () {
+            
+            mesh.visible=!mesh.visible;
+          },
+          hectahedron: function () {
+            
+            mesh2.visible=!mesh2.visible;
+          },
+        };
+
+        gui.add(camera.position, 'x', 20,30).step(1);
+        gui.add(camera.position, 'y', 0,20).step(1);
+
+    
+        gui.add(changeMeshConfig, 'dodecahedron');
+        gui.add(changeMeshConfig, 'octahedron');
+        gui.add(changeMeshConfig, 'tetrahedron');
+        gui.add(changeMeshConfig, 'hectahedron');
+        
+      }
+
+      function addGui(name, value, callback, isColor, min, max) {
+        var node;
+        param[name] = value;
+
+        if (isColor) {
+          node = gui.addColor(param, name).onChange(function () {
+            callback(param[name]);
+          });
+        } else if (typeof value == "object") {
+          node = gui.add(param, name, value).onChange(function () {
+            callback(param[name]);
+          });
+        } else {
+          node = gui.add(param, name, min, max).onChange(function () {
+            callback(param[name]);
+          });
+        }
+
+        return node;
+      }
+     
+      function Dodecahedron () {
+
+        //funkcija is net
+
+  var phi = (1 + Math.sqrt(5)) / 2;
+  var b = 1 / phi;
+  var c = 2 - phi;
+  var dertices = [
+     b,  b,  b,   0,  1,  c,  -b,  b,  b,  -c,  0,  1,   c,  0,  1,
+    -b, -b,  b,   0, -1,  c,   b, -b,  b,   c,  0,  1,  -c,  0,  1,
+     b, -b, -b,   0, -1, -c,  -b, -b, -b,  -c,  0, -1,   c,  0, -1,
+    -b,  b, -b,   0,  1, -c,   b,  b, -b,   c,  0, -1,  -c,  0, -1,
+     0,  1, -c,   0,  1,  c,   b,  b,  b,   1,  c,  0,   b,  b, -b,
+     0,  1,  c,   0,  1, -c,  -b,  b, -b,  -1,  c,  0,  -b,  b,  b,
+     0, -1, -c,   0, -1,  c,  -b, -b,  b,  -1, -c,  0,  -b, -b, -b,
+     0, -1,  c,   0, -1, -c,   b, -b, -b,   1, -c,  0,   b, -b,  b,
+     b,  b,  b,   c,  0,  1,   b, -b,  b,   1, -c,  0,   1,  c,  0,
+     b, -b, -b,   c,  0, -1,   b,  b, -b,   1,  c,  0,   1, -c,  0,
+    -b,  b, -b,  -c,  0, -1,  -b, -b, -b,  -1, -c,  0,  -1,  c,  0,
+    -b, -b,  b,  -c,  0,  1,  -b,  b,  b,  -1,  c,  0,  -1, -c,  0
+  ];
+
+  var ertices=dertices.map(function(x){
+    var temp = 1/x;
+    return x*1.6180339887498947631612771840168;
+  });
+
+  
+  var vertices = [];
+
+ 
+  for (var i = 0; i < ertices.length; i += 15) {
+    var a = [ertices[i], ertices[i + 1], ertices[i + 2]];
+    var b = [ertices[i + 3], ertices[i + 4], ertices[i + 5]];
+    var c = [ertices[i + 6], ertices[i + 7], ertices[i + 8]];
+    var d = [ertices[i + 9], ertices[i + 10], ertices[i + 11]];
+    var e = [ertices[i + 12], ertices[i + 13], ertices[i + 14]];
+    var center = [
+      (a[0] + b[0] + c[0] + d[0] + e[0]) / 5,
+      (a[1] + b[1] + c[1] + d[1] + e[1]) / 5,
+      (a[2] + b[2] + c[2] + d[2] + e[2]) / 5
+    ];
+    vertices.push.apply(vertices, a);
+    vertices.push.apply(vertices, b);
+    vertices.push.apply(vertices, center);
+    vertices.push.apply(vertices, b);
+    vertices.push.apply(vertices, c);
+  vertices.push.apply(vertices, center);
+    vertices.push.apply(vertices, c);
+    vertices.push.apply(vertices, d);
+    vertices.push.apply(vertices, center);
+    vertices.push.apply(vertices, d);
+    vertices.push.apply(vertices, e);
+    vertices.push.apply(vertices, center);
+    vertices.push.apply(vertices, e);
+    vertices.push.apply(vertices, a);
+   vertices.push.apply(vertices, center);
+  }
+
+  var indices = new Array(vertices.length / 3);
+  for (var i = 0; i < indices.length; ++i)
+  { indices[i] = i; console.log(i);}
+
+ 
+ 
+
+
+ 
+
+  return {
+    vertices: vertices,
+    indices: indices
+   
+  };
+};
+
+
+
+
+      init();
+      
+      makeshapes();
+      animate();
+      buildGui();
+
+    </script>
+  </body>
+</html>
